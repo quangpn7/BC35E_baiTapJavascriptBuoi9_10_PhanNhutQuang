@@ -96,7 +96,7 @@ function renderTable(data) {
             <th>${staff.staffPosition}</th>
             <th>${staff.staffSalary}</th>
             <th>${staff.staffRanking}</th>
-            <th><button id="btnEdit" data-toggle="modal" onclick = "editStaff('${staff.staffAccount}')"data-target="#myModal" class="btn btn-success"><i class="fa fa-pencil"></i></button><button onclick="deleteStaff('${staff.staffAccount}')" class="btn btn-danger"><i class="fa fa-trash"></i></button></th>
+            <th><button id="btnEdit" data-toggle="modal" onclick = "editStaff('${staff.staffAccount}')"data-target="#myModal" class="btn btn-success"><i class="fa fa-pencil"></i></button><button onclick="warningDel('${staff.staffName}','${staff.staffAccount}')" data-toggle = "modal" data-target="#warningModal" class="btn btn-danger"><i class="fa fa-trash"></i></button></th>
             
         </tr>
         `;
@@ -168,11 +168,14 @@ getEle("btnThemNV").addEventListener("click", function () {
 });
 
 //FUNCTION DELETE STAFF
-function deleteStaff(staffAccount) {
-  staffList.delStaff(staffAccount);
-  renderTable(staffList.staffListArr);
-  setLocalStorage();
-  popUpNoti("Xoá thành công!");
+function warningDel(staffName, staffAccount) {
+  getEle("spanDel").innerHTML = `Xác nhận xoá nhân viên: ${staffName}`;
+  getEle("delBtn").onclick = function deleteStaff() {
+    staffList.delStaff(staffAccount);
+    renderTable(staffList.staffListArr);
+    setLocalStorage();
+    popUpNoti("Xoá thành công!");
+  };
 }
 
 //FUNCITON EDIT STAFF
@@ -216,3 +219,34 @@ document.getElementById("findRanking").addEventListener("change", function () {
   }
 });
 //#endregion MAIN FUNCTION
+//ADDITIONAL FUNCTION FOR NUMBER INPUT
+//AUTO ADD COMMA "," AFTER INPUT
+function updateTextView(_obj) {
+  var num = getNumber(_obj.val());
+  if (num == 0) {
+    _obj.val("");
+  } else {
+    _obj.val(num.toLocaleString());
+  }
+}
+function getNumber(_str) {
+  var arr = _str.split("");
+  var out = new Array();
+  for (var cnt = 0; cnt < arr.length; cnt++) {
+    if (isNaN(arr[cnt]) == false) {
+      out.push(arr[cnt]);
+    }
+  }
+  return Number(out.join(""));
+}
+//AUTO RENDER COMMA WHEN TYPING
+$(document).ready(function () {
+  $("#luongCB").on("keyup", function () {
+    updateTextView($(this));
+  });
+});
+$("#luongCB").blur(function () {
+  $(this).val(function (i, v) {
+    return v.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  });
+});

@@ -230,6 +230,8 @@
                     id="tknv"
                     class="form-control input-sm"
                     placeholder="Tài khoản"
+                    data-toggle="tooltip"
+                    title="Tài khoản có 4-6 ký tự và không bỏ trống"
                   />
                 </div>
 
@@ -249,6 +251,8 @@
                     id="name"
                     class="form-control input-sm"
                     placeholder="Họ và tên"
+                    data-toggle="tooltip"
+                    title="Không bỏ trống"
                   />
                 </div>
                 <span class="sp-thongbao" id="tbTen"></span>
@@ -267,6 +271,8 @@
                     id="email"
                     class="form-control input-sm"
                     placeholder="Email"
+                    data-toggle="tooltip"
+                    title="Không bỏ trống"
                   />
                 </div>
 
@@ -286,6 +292,8 @@
                     id="password"
                     class="form-control input-sm"
                     placeholder="Mật khẩu"
+                    data-toggle="tooltip"
+                    title="(6-10 ký tự) Mật khẩu có ít nhất 1 chữ thường, 1 chữ IN và 1 ký tự đặc biệt"
                   />
                 </div>
                 <span class="sp-thongbao" id="tbMatKhau"></span>
@@ -304,6 +312,8 @@
                     id="datepicker"
                     class="form-control"
                     placeholder="Ngày làm"
+                    data-toggle="tooltip"
+                    title="dd/mm/yyyy (Không bỏ trống)"
                   />
                 </div>
 
@@ -323,6 +333,8 @@
                     id="luongCB"
                     class="form-control input-sm"
                     placeholder="Lương cơ bản"
+                    data-toggle="tooltip"
+                    title="Không bỏ trống"
                   />
                 </div>
                 <span class="sp-thongbao" id="tbLuongCB"></span>
@@ -357,6 +369,8 @@
                     id="gioLam"
                     class="form-control input-sm"
                     placeholder="Giờ làm"
+                    data-toggle="tooltip"
+                    title="Không bỏ trống"
                   />
                 </div>
                 <span class="sp-thongbao" id="tbGiolam"></span>
@@ -392,7 +406,7 @@
         </div>
       </div>
     </div>
-    <!-- The Noti Modal -->
+    <!-- Noti Modal -->
     <div
       class="modal fade"
       id="successModal"
@@ -401,9 +415,9 @@
       aria-labelledby="exampleModalCenterTitle"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-dialog" role="document">
         <div class="modal-content">
-          <div class="modal-body text-center display-4">
+          <div class="modal-body text-center font-weight-bold">
             <span id="modalSuccess"></span>
             <i class="fa fa-check text-success" aria-hidden="true"></i>
           </div>
@@ -416,6 +430,29 @@
             >
               Close
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Warning Modal -->
+    <div
+      class="modal fade"
+      id="warningModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalCenterTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-body text-center font-weight-bold">
+            <span id="spanDel"></span>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-danger" id="delBtn" data-dismiss="modal">
+              Delete
+            </button>
+            <button class="btn" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
@@ -447,35 +484,8 @@
       });
     </script>
     <script>
-      function updateTextView(_obj) {
-        var num = getNumber(_obj.val());
-        if (num == 0) {
-          _obj.val("");
-        } else {
-          _obj.val(num.toLocaleString());
-        }
-      }
-      function getNumber(_str) {
-        var arr = _str.split("");
-        var out = new Array();
-        for (var cnt = 0; cnt < arr.length; cnt++) {
-          if (isNaN(arr[cnt]) == false) {
-            out.push(arr[cnt]);
-          }
-        }
-        return Number(out.join(""));
-      }
       $(document).ready(function () {
-        $("#luongCB").on("keyup", function () {
-          updateTextView($(this));
-        });
-      });
-    </script>
-    <script>
-      $("#luongCB").blur(function () {
-        $(this).val(function (i, v) {
-          return v.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        });
+        $('[data-toggle="tooltip"]').tooltip();
       });
     </script>
     <!-- STAFF VALIDATION MODELING JS -->

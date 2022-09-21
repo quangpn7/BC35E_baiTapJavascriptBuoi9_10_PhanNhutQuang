@@ -31,6 +31,7 @@ function StaffList() {
   //FUNCTION DELETE STAFF
   this.delStaff = function (staffAccount) {
     var index = this.findIndexStaff(staffAccount);
+
     if (index !== -1) {
       this.staffListArr.splice(index, 1);
     }
@@ -38,6 +39,7 @@ function StaffList() {
   //FUNCTION UPDATE STAFF
   this.updateStaff = function (staff) {
     var index = this.findIndexStaff(staff.staffAccount);
+
     if (index !== -1) {
       this.staffListArr[index] = staff;
     }

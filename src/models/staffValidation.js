@@ -1,4 +1,5 @@
 function Validation() {
+  var staffList = new StaffList();
   //METHOD CHECK BLANK
   this.checkBlank = function (value, divError) {
     if (value === "") {
@@ -35,6 +36,7 @@ function Validation() {
     getEle(divError).style = "display: inline-block";
     return false;
   };
+
   //METHOD CHECK MAIL (Include @ and .)
   this.checkEmail = function (value, divError) {
     var emailValid = new RegExp(

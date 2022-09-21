@@ -22,7 +22,7 @@ function getStaffInfo() {
   var isValid = true;
   // CHECK ACCOUNT
   isValid &= validation.checkBlank(_staffAccount, "tbTKNV");
-  if (isValid == true) {
+  if (_staffAccount) {
     isValid &= validation.checkLen(
       _staffAccount,
       4,
@@ -31,11 +31,25 @@ function getStaffInfo() {
       "(*) Độ dài 4-6 ký tự"
     );
   }
+  // CHECK EXISTED
+  if (getEle("btnThemNV").style.display == "inline-block") {
+    var index = staffList.findIndexStaff(_staffAccount);
+    if (index == -1) {
+      isValid &= true;
+      getEle("tbTKNV").innerHTML = "";
+      getEle("tbTKNV").style = "display: none";
+    } else {
+      getEle("tbTKNV").innerHTML = "(*) Tài khoản đã tồn tại";
+      getEle("tbTKNV").style = "display: inline-block";
+      isValid &= false;
+    }
+  }
   // CHECK NAME
   isValid &= validation.checkBlank(_staffName, "tbTen");
   if (_staffName) {
     isValid &= validation.checkName(_staffName, "tbTen");
   }
+
   // CHECK EMAIL
   isValid &= validation.checkBlank(_staffMail, "tbEmail");
   if (_staffMail) {
@@ -52,7 +66,10 @@ function getStaffInfo() {
     isValid &= validation.checkDate(_staffStartDate, "tbNgay");
   }
   // CHECK BASE SALARY
-  isValid &= validation.checkBlank(_staffBaseSalary, "tbLuongCB");
+  if (_staffBaseSalary == 0) {
+    _staffBaseSalary = "";
+    isValid &= validation.checkBlank(_staffBaseSalary, "tbLuongCB");
+  }
   if (_staffBaseSalary) {
     isValid &= validation.checkBaseSalary(
       _staffBaseSalary,
@@ -129,12 +146,30 @@ function resetForm() {
   getEle("chucvu").value = "Chọn chức vụ";
   getEle("gioLam").value = "";
   //SPAN ERROR
+  getEle("tbTKNV").style = "display: none";
+  getEle("tbTen").style = "display: none";
+  getEle("tbMatKhau").style = "display: none";
+  getEle("tbEmail").style = "display: none";
+  getEle("tbNgay").style = "display: none";
+  getEle("tbLuongCB").style = "display: none";
+  getEle("tbChucVu").style = "display: none";
+  getEle("tbGiolam").style = "display: none";
+  //-----
+  getEle("tbTKNV").innerHTML = "";
+  getEle("tbTen").innerHTML = "";
+  getEle("tbMatKhau").innerHTML = "";
+  getEle("tbEmail").innerHTML = "";
+  getEle("tbNgay").innerHTML = "";
+  getEle("tbLuongCB").innerHTML = "";
+  getEle("tbChucVu").innerHTML = "";
+  getEle("tbGiolam").innerHTML = "";
 }
 
 //FUNCTION REMODALING INFO TAB
 
 function reloadForm() {
   getEle("btnThemNV").style = "display: inline-block";
+  getEle("tknv").disabled = false;
   document.querySelector("#myModal h2").innerHTML = "Log in";
   getEle("btnCapNhat").style = "display: none";
   resetForm();
@@ -182,12 +217,14 @@ function warningDel(staffName, staffAccount) {
 //1. DISPLAY INFO
 function editStaff(staffAccount) {
   //BUTTON DISPLAY
+  resetForm();
   getEle("btnThemNV").style = "display: none";
   document.querySelector("#myModal h2").innerHTML = "Chỉnh sửa nhân viên";
   getEle("btnCapNhat").style = "display: inline-block";
   ///MAIN SCRIPT
   var staff = staffList.getAllDetail(staffAccount);
   getEle("tknv").value = staff.staffAccount;
+  getEle("tknv").disabled = true;
   getEle("name").value = staff.staffName;
   getEle("email").value = staff.staffMail;
   getEle("password").value = staff.staffPass;

@@ -101,4 +101,3 @@ function Validation() {
     return false;
   };
 }
-$("#password").tooltip({ trigger: "focus", title: "Password tooltip" });

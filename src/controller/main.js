@@ -36,8 +36,6 @@ function getStaffInfo() {
     var index = staffList.findIndexStaff(_staffAccount);
     if (index == -1) {
       isValid &= true;
-      getEle("tbTKNV").innerHTML = "";
-      getEle("tbTKNV").style = "display: none";
     } else {
       getEle("tbTKNV").innerHTML = "(*) Tài khoản đã tồn tại";
       getEle("tbTKNV").style = "display: inline-block";

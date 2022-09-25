@@ -8,7 +8,7 @@ function getEle(id) {
 
 //#region GLOBAL
 //FUNCTION GET INPUT STAFF INFO
-function getStaffInfo() {
+function getStaffInfo(isAdd) {
   var _staffAccount = getEle("tknv").value;
   var _staffName = getEle("name").value;
   var _staffMail = getEle("email").value;
@@ -21,63 +21,63 @@ function getStaffInfo() {
   //CHECK VALIDATION
   var isValid = true;
   // CHECK ACCOUNT
-  isValid &= validation.checkBlank(_staffAccount, "tbTKNV");
-  if (_staffAccount) {
-    isValid &= validation.checkLen(
-      _staffAccount,
-      4,
-      6,
-      "tbTKNV",
-      "(*) Độ dài 4-6 ký tự"
-    );
-  }
-  // CHECK EXISTED
-  if (getEle("btnThemNV").style.display == "inline-block") {
-    var index = staffList.findIndexStaff(_staffAccount);
-    if (index == -1) {
-      isValid &= true;
-    } else {
-      getEle("tbTKNV").innerHTML = "(*) Tài khoản đã tồn tại";
-      getEle("tbTKNV").style = "display: inline-block";
-      isValid &= false;
-    }
-  }
-  // CHECK NAME
-  isValid &= validation.checkBlank(_staffName, "tbTen");
-  if (_staffName) {
-    isValid &= validation.checkName(_staffName, "tbTen");
+  if (isAdd) {
+    isValid &=
+      validation.checkBlank(_staffAccount, "tbTKNV") &&
+      validation.checkLen(
+        _staffAccount,
+        4,
+        6,
+        "tbTKNV",
+        "(*) Độ dài 4-6 ký tự"
+      ) &&
+      validation.checkExisted(
+        _staffAccount,
+        "tbTKNV",
+        "(*) Tài khoản đã tồn tại",
+        staffList.staffListArr
+      );
   }
 
+  // CHECK NAME
+  isValid &=
+    validation.checkBlank(_staffName, "tbTen") &&
+    validation.checkName(_staffName, "tbTen");
+
   // CHECK EMAIL
-  isValid &= validation.checkBlank(_staffMail, "tbEmail");
-  if (_staffMail) {
-    isValid &= validation.checkEmail(_staffMail, "tbEmail");
-  }
+  isValid &=
+    validation.checkBlank(_staffMail, "tbEmail") &&
+    validation.checkEmail(_staffMail, "tbEmail");
+
   // CHECK PASSWORD
-  isValid &= validation.checkBlank(_staffPass, "tbMatKhau");
-  if (_staffPass) {
-    isValid &= validation.checkPass(_staffPass, "tbMatKhau");
-  }
+  isValid &=
+    validation.checkBlank(_staffPass, "tbMatKhau") &&
+    validation.checkPass(_staffPass, "tbMatKhau");
+
   // CHECK DATE
-  isValid &= validation.checkBlank(_staffStartDate, "tbNgay");
-  if (_staffStartDate) {
-    isValid &= validation.checkDate(_staffStartDate, "tbNgay");
-  }
+  isValid &=
+    validation.checkBlank(_staffStartDate, "tbNgay") &&
+    validation.checkDate(_staffStartDate, "tbNgay");
+
   // CHECK BASE SALARY
   if (_staffBaseSalary == 0) {
     _staffBaseSalary = "";
     isValid &= validation.checkBlank(_staffBaseSalary, "tbLuongCB");
   }
-  if (_staffBaseSalary) {
-    isValid &= validation.checkBaseSalary(
-      _staffBaseSalary,
-      1e6,
-      2e7,
-      "tbLuongCB"
-    );
-  }
+
+  isValid &= validation.checkBaseSalary(
+    _staffBaseSalary,
+    1e6,
+    2e7,
+    "tbLuongCB"
+  );
+
   // CHECK POSITION
-  isValid &= validation.checkPosition(_staffPosition, "tbChucVu");
+  isValid &= validation.checkSelect(
+    "chucvu",
+    "tbChucVu",
+    "(*) Vui lòng chọn chức vụ"
+  );
   // CHECK TIME
   isValid &= validation.checkBlank(_staffTime, "tbGiolam");
   //CREATE STAFF OBJECT
@@ -190,7 +190,7 @@ function removePopUp() {
 //#region MAIN FUNCTION
 //FUNCTION ADD STAFF
 getEle("btnThemNV").addEventListener("click", function () {
-  var staff = getStaffInfo();
+  var staff = getStaffInfo(true);
   if (staff !== null) {
     staffList.addStaff(staff);
     popUpNoti("Thêm nhân viên thành công!");
@@ -233,7 +233,7 @@ function editStaff(staffAccount) {
 }
 //2. UPDATE
 getEle("btnCapNhat").addEventListener("click", function () {
-  var updatedStaff = getStaffInfo();
+  var updatedStaff = getStaffInfo(false);
   if (updatedStaff !== null) {
     staffList.updateStaff(updatedStaff);
     renderTable(staffList.staffListArr);

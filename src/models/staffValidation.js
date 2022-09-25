@@ -11,6 +11,25 @@ function Validation() {
     getEle(divError).style = "display: none";
     return true;
   };
+  //METHOD CHECK EXISTED ACCOUNT
+  this.checkExisted = function (value, divError, message, arr) {
+    var isExisted = false;
+    for (var i = 0; i < arr.length; i++) {
+      var staff = arr[i];
+      if (staff.staffAccount === value) {
+        isExisted = true;
+        break;
+      }
+    }
+    if (isExisted) {
+      getEle(divError).innerHTML = message;
+      getEle(divError).style = "display: inline-block";
+      return false;
+    }
+    getEle(divError).innerHTML = "";
+    getEle(divError).style = "display: none";
+    return true;
+  };
   //METHOD CHECK LENGTH
   this.checkLen = function (value, minLen, maxLen, divError, message) {
     if (value.length >= minLen && value.length <= maxLen) {
@@ -92,13 +111,13 @@ function Validation() {
     return false;
   };
   // METHOD CHECK POSITION (Should be selected)
-  this.checkPosition = function (value, divError) {
-    if (value !== "Chọn chức vụ") {
+  this.checkSelect = function (value, divError, message) {
+    if (getEle(value).selectedIndex !== 0) {
       getEle(divError).innerHTML = "";
       getEle(divError).style = "display: none";
       return true;
     }
-    getEle(divError).innerHTML = "(*) Vui lòng chọn chức vụ";
+    getEle(divError).innerHTML = message;
     getEle(divError).style = "display: inline-block";
     return false;
   };
